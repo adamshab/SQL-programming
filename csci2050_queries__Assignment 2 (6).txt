@@ -1,0 +1,399 @@
+-- Collection: Assignment 2
+-- Created by: adamshab
+
+-- ==================================
+
+-- Query: 
+CREATE DATABASE adamshab_milkFarm
+
+-- Run at 2024-02-14 12:23:00
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE TABLE farm (
+  id INT PRIMARY KEY,
+  addr VARCHAR(255),
+  city VARCHAR(255),
+  state VARCHAR(2),
+  zip VARCHAR(10)
+);
+
+-- Run at 2024-02-19 11:10:11
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE TABLE milkingMachine (
+  id INT PRIMARY KEY,
+  farm INT,
+  FOREIGN KEY (farm) REFERENCES farm(id)
+);
+
+-- Run at 2024-02-19 11:10:46
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE TABLE feed (
+  farm INT,
+  lbs INT CHECK (lbs > 0), 
+  kind VARCHAR(255),
+  FOREIGN KEY (farm) REFERENCES farm(id)
+);
+
+-- Run at 2024-02-19 11:10:57
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE TABLE tank (
+  id INT PRIMARY KEY,
+  farm INT,
+  purchase DATE,
+  retired DATE,
+  FOREIGN KEY (farm) REFERENCES farm(id)
+);
+
+-- Run at 2024-02-19 11:11:09
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE TABLE cow (
+  tag INT PRIMARY KEY,
+  name VARCHAR(255),
+  currentFarm INT,
+  FOREIGN KEY (currentFarm) REFERENCES farm(id)
+);
+
+-- Run at 2024-02-19 11:14:24
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE TABLE milk (
+  id INT PRIMARY KEY,
+  milkingMachine INT,
+  cow INT,
+  date DATE,
+  start TIME,
+  stop TIME,
+  ozs INT CHECK (ozs > 0),
+  FOREIGN KEY (milkingMachine) REFERENCES milkingMachine(id),
+  FOREIGN KEY (cow) REFERENCES cow(tag)
+);
+
+-- Run at 2024-02-19 11:14:36
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE TABLE hand (
+  id INT PRIMARY KEY,
+  fname VARCHAR(255),
+  lname VARCHAR(255),
+  farm INT,
+  FOREIGN KEY (farm) REFERENCES farm(id)
+);
+
+-- Run at 2024-02-19 11:15:06
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE TABLE transportCompany (
+  id INT PRIMARY KEY,
+  name VARCHAR(255)
+);
+
+-- Run at 2024-02-19 11:15:19
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE TABLE processingCompany (
+  id INT PRIMARY KEY,
+  name VARCHAR(255)
+);
+
+-- Run at 2024-02-19 11:15:34
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE TABLE transport (
+  id INT PRIMARY KEY,
+  transport INT,
+  processor INT,
+  truckNum VARCHAR(255),
+  fromTank INT,
+  date DATE,
+  time TIME,
+  FOREIGN KEY (transport) REFERENCES transportCompany(id),
+  FOREIGN KEY (processor) REFERENCES processingCompany(id),
+  FOREIGN KEY (fromTank) REFERENCES tank(id)
+);
+
+-- Run at 2024-02-19 11:15:50
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE TABLE tankInput (
+  tank INT,
+  milkAdded INT,
+  date DATE,
+  time TIME,
+  FOREIGN KEY (tank) REFERENCES tank(id),
+  FOREIGN KEY (milkAdded) REFERENCES milk(id)
+);
+
+-- Run at 2024-02-19 11:16:04
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE TABLE maintenance (
+  id INT PRIMARY KEY,
+  affected INT,
+  primary_hand INT, -- Renamed from 'primary' to 'primary_hand'
+  date DATE,
+  wasSuccess BOOLEAN,
+  FOREIGN KEY (affected) REFERENCES milkingMachine(id),
+  FOREIGN KEY (primary_hand) REFERENCES hand(id) -- Adjusted foreign key reference
+);
+
+-- Run at 2024-02-19 11:51:40
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Cow to Farm
+ALTER TABLE cow
+ADD CONSTRAINT fk_cow_farm FOREIGN KEY (currentFarm) REFERENCES farm(id);
+
+-- Run at 2024-02-21 14:07:09
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- MilkingMachine to Farm
+ALTER TABLE milkingMachine
+ADD CONSTRAINT fk_milkingMachine_farm FOREIGN KEY (farm) REFERENCES farm(id);
+
+-- Run at 2024-02-21 14:07:24
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Feed to Farm
+ALTER TABLE feed
+ADD CONSTRAINT fk_feed_farm FOREIGN KEY (farm) REFERENCES farm(id);
+
+-- Run at 2024-02-21 14:08:01
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Changed Tank to Farm
+ALTER TABLE tank
+ADD CONSTRAINT fk_tank_farm FOREIGN KEY (farm) REFERENCES farm(id);
+
+-- Run at 2024-02-21 14:08:24
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Changed Milk to Milkingmachine
+ALTER TABLE milk
+ADD CONSTRAINT fk_milk_milkingMachine FOREIGN KEY (milkingMachine) REFERENCES milkingMachine(id);
+
+-- Run at 2024-02-21 14:08:51
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Milk to Cow
+ALTER TABLE milk
+ADD CONSTRAINT fk_milk_cow FOREIGN KEY (cow) REFERENCES cow(tag);
+
+-- Run at 2024-02-21 14:09:28
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- TankInput to Tank
+ALTER TABLE tankInput
+ADD CONSTRAINT fk_tankInput_tank FOREIGN KEY (tank) REFERENCES tank(id);
+
+-- Run at 2024-02-21 14:09:49
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- TankInput to Milk
+ALTER TABLE tankInput
+ADD CONSTRAINT fk_tankInput_milk FOREIGN KEY (milkAdded) REFERENCES milk(id);
+
+-- Run at 2024-02-21 14:10:05
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Hand to Farm
+ALTER TABLE hand
+ADD CONSTRAINT fk_hand_farm FOREIGN KEY (farm) REFERENCES farm(id);
+
+-- Run at 2024-02-21 14:10:23
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Changed Transport to TransportCompany and ProcessingCompany
+ALTER TABLE transport
+ADD CONSTRAINT fk_transport_transportCompany FOREIGN KEY (transport) REFERENCES transportCompany(id),
+ADD CONSTRAINT fk_transport_processingCompany FOREIGN KEY (processor) REFERENCES processingCompany(id);
+
+-- Run at 2024-02-21 14:11:39
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+

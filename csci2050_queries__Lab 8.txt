@@ -1,0 +1,224 @@
+-- Collection: Lab 8
+-- Created by: adamshab
+
+-- ==================================
+
+-- Query: 
+CREATE FUNCTION `customer_outstandingOrderValue`(`p_customer_id` INT) RETURNS DECIMAL(10,2)
+BEGIN
+  DECLARE `v_outstandingValue` DECIMAL(10,2);
+  SELECT SUM(`product`.`product_price` * `cartItem`.`ci_quantity`) INTO `v_outstandingValue`
+    FROM `cartItem`
+    INNER JOIN `cart` ON `cart`.`cart_id` = `cartItem`.`ci_cart`
+    INNER JOIN `product` ON `cartItem`.`ci_product` = `product`.`product_id`
+    WHERE `cartItem`.`ci_shipDate` IS NULL
+      AND `cart`.`cart_customer` = `p_customer_id`;
+  RETURN IFNULL(`v_outstandingValue`, 0);
+END;
+
+-- Run at 2024-03-13 11:05:11
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE FUNCTION `sales_over_range`(`p_startDate` DATE, `p_endDate` DATE) RETURNS DECIMAL(10,2)
+BEGIN
+  DECLARE `v_salesValue` DECIMAL(10,2);
+  SELECT SUM(p.product_price * ci.ci_quantity) INTO `v_salesValue`
+    FROM `cartItem` ci
+    INNER JOIN `product` p ON ci.ci_product = p.product_id
+    WHERE ci.ci_shipDate BETWEEN `p_startDate` AND `p_endDate`;
+  RETURN IFNULL(`v_salesValue`, 0);
+END;
+
+-- Run at 2024-03-13 11:05:42
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+SELECT 
+    c.customer_name, 
+    COALESCE(SUM(p.product_price * ci.ci_quantity), 0) AS outstandingValue
+FROM 
+    customer c
+LEFT JOIN 
+    cart ca ON c.customer_id = ca.cart_customer
+LEFT JOIN 
+    cartItem ci ON ca.cart_id = ci.ci_cart
+LEFT JOIN 
+    product p ON ci.ci_product = p.product_id
+WHERE 
+    ci.ci_shipDate IS NULL OR ci.ci_cart IS NULL
+GROUP BY 
+    c.customer_name
+ORDER BY 
+    c.customer_name;
+
+-- Run at 2024-03-13 11:09:02
+-- 
+
+-- 4 Results:
+-- +------------------------+------------------+
+-- |      customer_name     | outstandingValue |
+-- +------------------------+------------------+
+-- |        LITE Industrial |     115600207.96 |
+-- +------------------------+------------------+
+-- | Marsh Lane Metal Works |     116513256.50 |
+-- +------------------------+------------------+
+-- |   Prairie Construction |     112249352.08 |
+-- +------------------------+------------------+
+-- |        Rex Tooling Inc |     117514020.83 |
+-- +------------------------+------------------+
+
+-- ==================================
+
+-- Query: 
+SELECT 
+    c.customer_name, 
+    IFNULL((
+        SELECT SUM(p.product_price * ci.ci_quantity)
+        FROM cart ca
+        INNER JOIN cartItem ci ON ca.cart_id = ci.ci_cart
+        INNER JOIN product p ON ci.ci_product = p.product_id
+        WHERE ca.cart_customer = c.customer_id AND ci.ci_shipDate IS NULL
+    ), 0) AS outstandingValue
+FROM 
+    customer c
+ORDER BY 
+    c.customer_name;
+
+-- Run at 2024-03-13 11:10:45
+-- 
+
+-- 5 Results:
+-- +------------------------+------------------+
+-- |      customer_name     | outstandingValue |
+-- +------------------------+------------------+
+-- |        LITE Industrial |     115600207.96 |
+-- +------------------------+------------------+
+-- | Marsh Lane Metal Works |     116513256.50 |
+-- +------------------------+------------------+
+-- |   Prairie Construction |     112249352.08 |
+-- +------------------------+------------------+
+-- |  Re-Barre Construction |             0.00 |
+-- +------------------------+------------------+
+-- |        Rex Tooling Inc |     117514020.83 |
+-- +------------------------+------------------+
+
+-- ==================================
+
+-- Query: 
+SELECT 
+    month_data.name,
+    COALESCE(SUM(p.product_price * ci.ci_quantity), 0) AS sales
+FROM (
+    SELECT 'January' AS name, '2020-01-01' AS start_date, '2020-01-31' AS end_date UNION
+    SELECT 'February', '2020-02-01', '2020-02-29' UNION
+    SELECT 'March', '2020-03-01', '2020-03-31' UNION
+    SELECT 'April', '2020-04-01', '2020-04-30' UNION
+    SELECT 'May', '2020-05-01', '2020-05-31' UNION
+    SELECT 'June', '2020-06-01', '2020-06-30' UNION
+    SELECT 'July', '2020-07-01', '2020-07-31' UNION
+    SELECT 'August', '2020-08-01', '2020-08-31' -- Add more months as needed
+) AS month_data
+LEFT JOIN cart c ON c.cart_orderDate BETWEEN month_data.start_date AND month_data.end_date
+LEFT JOIN cartItem ci ON ci.ci_cart = c.cart_id
+LEFT JOIN product p ON p.product_id = ci.ci_product
+GROUP BY month_data.name
+ORDER BY STR_TO_DATE(CONCAT(month_data.name, ' 1, 2020'), '%M %d, %Y');
+
+-- Run at 2024-03-14 15:40:16
+-- 
+
+-- 8 Results:
+-- +----------+--------------+
+-- |   name   |     sales    |
+-- +----------+--------------+
+-- |  January | 154142047.34 |
+-- +----------+--------------+
+-- | February | 140660223.28 |
+-- +----------+--------------+
+-- |    March | 152079359.85 |
+-- +----------+--------------+
+-- |    April | 149322250.74 |
+-- +----------+--------------+
+-- |      May | 153573611.63 |
+-- +----------+--------------+
+-- |     June | 149117268.09 |
+-- +----------+--------------+
+-- |     July | 154855768.80 |
+-- +----------+--------------+
+-- |   August | 154143004.82 |
+-- +----------+--------------+
+
+-- ==================================
+
+-- Query: 
+SELECT 
+    MONTHNAME(c.cart_orderDate) AS name,
+    ROUND(
+        100 * SUM(
+            CASE 
+                WHEN ci.total_items = ci.shipped_items THEN 1 
+                ELSE 0 
+            END
+        ) / COUNT(DISTINCT c.cart_id), 2
+    ) AS completed_sales
+FROM 
+    cart c
+JOIN 
+    (
+        SELECT 
+            ci_cart, 
+            COUNT(*) AS total_items,
+            COUNT(ci_shipDate) AS shipped_items
+        FROM 
+            cartItem
+        GROUP BY 
+            ci_cart
+    ) ci ON ci.ci_cart = c.cart_id
+WHERE 
+    c.cart_orderDate BETWEEN '2020-01-01' AND '2020-08-31'
+GROUP BY 
+    MONTH(c.cart_orderDate)
+ORDER BY 
+    MONTH(c.cart_orderDate);
+
+-- Run at 2024-03-14 15:48:07
+-- 
+
+-- 8 Results:
+-- +----------+-----------------+
+-- |   name   | completed_sales |
+-- +----------+-----------------+
+-- |  January |           83.95 |
+-- +----------+-----------------+
+-- | February |           83.43 |
+-- +----------+-----------------+
+-- |    March |           84.70 |
+-- +----------+-----------------+
+-- |    April |           84.15 |
+-- +----------+-----------------+
+-- |      May |           84.32 |
+-- +----------+-----------------+
+-- |     June |           84.34 |
+-- +----------+-----------------+
+-- |     July |           84.63 |
+-- +----------+-----------------+
+-- |   August |           83.95 |
+-- +----------+-----------------+
+
+-- ==================================
+

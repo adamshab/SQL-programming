@@ -1,0 +1,130 @@
+-- Collection: Outstanding orders lab
+-- Created by: adamshab
+
+-- ==================================
+
+-- Query: 
+CREATE VIEW outstandingOrders AS
+SELECT c.cart_id, c.cart_orderDate, c.cart_customer, 
+       ci.ci_cart, ci.ci_shipDate, ci.ci_product, ci.ci_quantity
+FROM cart c
+JOIN cartItem ci ON c.cart_id = ci.ci_cart
+WHERE ci.ci_shipDate IS NULL;
+
+-- Run at 2024-02-22 15:20:30
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE VIEW OutstandingOrders AS
+SELECT ci.ci_cart
+FROM cartItem ci
+JOIN cart c ON ci.ci_cart = c.cart_id
+JOIN customer cu ON c.cart_customer = cu.customer_id
+WHERE c.cart_orderDate = '2021-08-03'AND cu.customer_name = 'Rex Tooling Inc' AND ci.ci_shipDate IS NULL;
+
+-- Run at 2024-02-22 15:28:37
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE VIEW OrdersBeforeDateWithDetails AS
+SELECT 
+    c.cart_id, 
+    cu.customer_name AS Customer_Name, 
+    p.product_name AS Product_Description, 
+    c.cart_orderDate, 
+    ci.ci_shipDate, 
+    ci.ci_quantity, 
+    p.product_price AS Product_Price
+FROM 
+    cartItem ci
+JOIN 
+    cart c ON ci.ci_cart = c.cart_id
+JOIN 
+    customer cu ON c.cart_customer = cu.customer_id
+JOIN 
+    product p ON ci.ci_product = p.product_id
+WHERE 
+    c.cart_orderDate < '2020-02-01'  AND ci.ci_quantity > 1990 AND p.product_price > 14.50 AND ci.ci_shipDate IS NOT NULL;
+
+-- Run at 2024-02-22 15:29:10
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE VIEW SumOfOutstandingQuantities AS
+SELECT 
+    p.product_id, 
+    p.product_name, 
+    SUM(ci.ci_quantity) AS OUTSTANDING_QTY
+FROM 
+    cartItem ci
+JOIN 
+    cart c ON ci.ci_cart = c.cart_id
+JOIN 
+    customer cu ON c.cart_customer = cu.customer_id
+JOIN 
+    product p ON ci.ci_product = p.product_id
+WHERE 
+    cu.customer_state = 'TX' AND ci.ci_shipDate IS NULL
+GROUP BY 
+    p.product_id, p.product_name;
+
+-- Run at 2024-02-22 15:30:12
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE VIEW AggregateSalesData AS
+SELECT 
+    cu.customer_name AS Customer_Name,
+    SUM(CASE WHEN p.product_name = 'Copper' THEN ci.ci_quantity ELSE 0 END) / 1000000.0 AS Copper,
+    SUM(ci.ci_quantity * p.product_price) / 1000000.0 AS Market_Value
+FROM 
+    cartItem ci
+JOIN 
+    cart c ON ci.ci_cart = c.cart_id
+JOIN 
+    customer cu ON c.cart_customer = cu.customer_id
+JOIN 
+    product p ON ci.ci_product = p.product_id
+WHERE 
+    ci.ci_shipDate IS NULL
+GROUP BY 
+    cu.customer_name;
+
+-- Run at 2024-02-22 15:31:09
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+

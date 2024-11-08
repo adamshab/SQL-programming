@@ -1,0 +1,156 @@
+-- Collection: Assignment2part2
+-- Created by: adamshab
+
+-- ==================================
+
+-- Query: 
+-- Cow to Farm
+ALTER TABLE cow
+ADD CONSTRAINT fk_cow_farm FOREIGN KEY (currentFarm) REFERENCES farm(id);
+
+-- Run at 2024-02-21 14:07:09
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- MilkingMachine to Farm
+ALTER TABLE milkingMachine
+ADD CONSTRAINT fk_milkingMachine_farm FOREIGN KEY (farm) REFERENCES farm(id);
+
+-- Run at 2024-02-21 14:07:24
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Feed to Farm
+ALTER TABLE feed
+ADD CONSTRAINT fk_feed_farm FOREIGN KEY (farm) REFERENCES farm(id);
+
+-- Run at 2024-02-21 14:08:01
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Changed Tank to Farm
+ALTER TABLE tank
+ADD CONSTRAINT fk_tank_farm FOREIGN KEY (farm) REFERENCES farm(id);
+
+-- Run at 2024-02-21 14:08:24
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Changed Milk to Milkingmachine
+ALTER TABLE milk
+ADD CONSTRAINT fk_milk_milkingMachine FOREIGN KEY (milkingMachine) REFERENCES milkingMachine(id);
+
+-- Run at 2024-02-21 14:08:51
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Milk to Cow
+ALTER TABLE milk
+ADD CONSTRAINT fk_milk_cow FOREIGN KEY (cow) REFERENCES cow(tag);
+
+-- Run at 2024-02-21 14:09:28
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- TankInput to Tank
+ALTER TABLE tankInput
+ADD CONSTRAINT fk_tankInput_tank FOREIGN KEY (tank) REFERENCES tank(id);
+
+-- Run at 2024-02-21 14:09:49
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- TankInput to Milk
+ALTER TABLE tankInput
+ADD CONSTRAINT fk_tankInput_milk FOREIGN KEY (milkAdded) REFERENCES milk(id);
+
+-- Run at 2024-02-21 14:10:05
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Hand to Farm
+ALTER TABLE hand
+ADD CONSTRAINT fk_hand_farm FOREIGN KEY (farm) REFERENCES farm(id);
+
+-- Run at 2024-02-21 14:10:23
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Changed Transport to TransportCompany and ProcessingCompany
+ALTER TABLE transport
+ADD CONSTRAINT fk_transport_transportCompany FOREIGN KEY (transport) REFERENCES transportCompany(id),
+ADD CONSTRAINT fk_transport_processingCompany FOREIGN KEY (processor) REFERENCES processingCompany(id);
+
+-- Run at 2024-02-21 14:11:39
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+

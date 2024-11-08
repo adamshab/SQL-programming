@@ -1,0 +1,522 @@
+-- Collection: Assignment3DB2050
+-- Created by: adamshab
+
+-- ==================================
+
+-- Query: 
+CREATE PROCEDURE addFarm(IN addr VARCHAR(40), IN city VARCHAR(20), IN state VARCHAR(2), IN zip VARCHAR(5))
+BEGIN
+    INSERT INTO farm(addr, city, state, zip) VALUES (addr, city, state, zip);
+END;
+
+-- Run at 2024-03-23 13:59:01
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE PROCEDURE addCow(IN cow_tag CHAR(8), IN cow_name VARCHAR(15), IN cow_farm INT)
+BEGIN
+    INSERT INTO cow(cow_tag, cow_name, cow_farm) VALUES (cow_tag, cow_name, cow_farm);
+END;
+
+-- Run at 2024-03-23 13:59:16
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE PROCEDURE transferCow(IN cow_tag CHAR(8), IN new_farm INT)
+BEGIN
+    UPDATE cow SET cow_farm = new_farm WHERE cow_tag = cow_tag;
+END;
+
+-- Run at 2024-03-23 13:59:27
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE PROCEDURE purchaseFeed(IN f_farm INT, IN f_datetime DATETIME, IN f_oz INT, IN kind VARCHAR(16))
+BEGIN
+    INSERT INTO feed(f_farm, f_datetime, f_oz, kind) VALUES (f_farm, f_datetime, f_oz, kind);
+END;
+
+-- Run at 2024-03-23 13:59:38
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE PROCEDURE hireHand(IN hand_fname VARCHAR(16), IN hand_lname VARCHAR(16), IN hand_primaryFarm INT)
+BEGIN
+    INSERT INTO hand(hand_fname, hand_lname, hand_primaryFarm) VALUES (hand_fname, hand_lname, hand_primaryFarm);
+END;
+
+-- Run at 2024-03-23 14:01:32
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE PROCEDURE purchaseMachine(IN mm_farm INT)
+BEGIN
+    INSERT INTO milkingMachine(mm_farm) VALUES (mm_farm);
+END;
+
+-- Run at 2024-03-23 14:02:23
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE PROCEDURE machineMaintenance(IN m_affected INT, IN m_primary INT, IN m_date DATE, IN m_wasSuccess BOOL)
+BEGIN
+    INSERT INTO maintenance(m_affected, m_primary, m_date, m_wasSuccess) VALUES (m_affected, m_primary, m_date, m_wasSuccess);
+END;
+
+-- Run at 2024-03-23 14:04:26
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE PROCEDURE purchaseTank(IN t_farm INT, IN t_purchase DATE)
+BEGIN
+    INSERT INTO tank(t_farm, t_purchase) VALUES (t_farm, t_purchase);
+END;
+
+-- Run at 2024-03-23 14:06:12
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE PROCEDURE milkingEvent(IN milk_machine INT, IN milk_cow VARCHAR(8), IN milk_date DATE, IN milk_start TIME, IN milk_stop TIME, IN milk_oz INT)
+BEGIN
+    INSERT INTO milk(milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz);
+END;
+
+-- Run at 2024-03-23 14:07:57
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE PROCEDURE newCompany(IN company_name VARCHAR(30), IN c_doesProcessing BOOL, IN c_doesTransport BOOL)
+BEGIN
+    INSERT INTO company(company_name, c_doesProcessing, c_doesTransport) VALUES (company_name, c_doesProcessing, c_doesTransport);
+END;
+
+-- Run at 2024-03-23 14:10:12
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE PROCEDURE editCompany(IN company_id INT, IN company_name VARCHAR(30), IN c_doesProcessing BOOL, IN c_doesTransport BOOL)
+BEGIN
+    UPDATE company SET company_name = company_name, c_doesProcessing = c_doesProcessing, c_doesTransport = c_doesTransport WHERE company_id = company_id;
+END;
+
+-- Run at 2024-03-23 14:12:11
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+CREATE PROCEDURE milkDelivery(IN t_transporter INT, IN t_processor INT, IN t_truckNum VARCHAR(8), IN t_fromTank INT, IN t_pickup DATETIME)
+BEGIN
+    INSERT INTO transport(t_transporter, t_processor, t_truckNum, t_fromTank, t_pickup) VALUES (t_transporter, t_processor, t_truckNum, t_fromTank, t_pickup);
+END;
+
+-- Run at 2024-03-23 14:14:55
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+INSERT INTO farm(farm_id, addr, city, state, zip) VALUES (1, 'Country 27 Blvd', 'Pine Island', 'MN', '55963');
+
+-- Run at 2024-03-23 14:18:02
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+INSERT INTO cow (cow_tag, cow_name, cow_farm) VALUES ('1', 'Buttercup', 1);
+INSERT INTO cow (cow_tag, cow_name, cow_farm) VALUES ('2', 'Clarabelle', 1);
+INSERT INTO cow (cow_tag, cow_name, cow_farm) VALUES ('3', 'Daisy', 1);
+INSERT INTO cow (cow_tag, cow_name, cow_farm) VALUES ('4', 'Bella', 1);
+INSERT INTO cow (cow_tag, cow_name, cow_farm) VALUES ('5', 'Bessie', 1);
+
+-- Run at 2024-03-23 14:21:38
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+INSERT INTO feed (f_farm, f_datetime, f_oz, kind) VALUES (1, '2024-01-03 00:00:00', 2800, 'Alfalfa');
+
+INSERT INTO feed (f_farm, f_datetime, f_oz, kind) VALUES (1, '2024-01-17 00:00:00', 280, 'Corn');
+
+-- Run at 2024-03-23 14:23:54
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+INSERT INTO milkingMachine (mm_id, mm_farm) VALUES (1, 1);
+INSERT INTO tank (tank_id, t_farm, t_purchase) VALUES (1, 1, '2024-01-01');
+
+-- Run at 2024-03-24 15:25:33
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+-- Bella's milking events
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (1, 1, '4', '2024-01-01', '07:02', '07:05', 300);
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (7, 1, '4', '2024-01-01', '11:48', '12:05', 211);
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (15, 1, '4', '2024-01-01', '16:33', '16:46', 257);
+
+-- Clarabelle's milking events
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (2, 1, '2', '2024-01-01', '07:07', '07:13', 234);
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (9, 1, '2', '2024-01-01', '12:33', '12:45', 275);
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (12, 1, '2', '2024-01-01', '15:23', '15:45', 232);
+
+-- Bessie's milking events
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (3, 1, '5', '2024-01-01', '07:16', '07:23', 274);
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (10, 1, '5', '2024-01-01', '12:49', '13:05', 286);
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (11, 1, '5', '2024-01-01', '15:02', '15:15', 187);
+
+-- Daisy's milking events
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (4, 1, '3', '2024-01-01', '07:28', '07:36', 186);
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (6, 1, '3', '2024-01-01', '11:23', '11:33', 247);
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (14, 1, '3', '2024-01-01', '16:21', '16:30', 312);
+
+-- Buttercup's milking events
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (5, 1, '1', '2024-01-01', '07:53', '08:08', 235);
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (8, 1, '1', '2024-01-01', '12:12', '12:30', 198);
+INSERT INTO milk (milk_id, milk_machine, milk_cow, milk_date, milk_start, milk_stop, milk_oz) VALUES (13, 1, '1', '2024-01-01', '15:58', '16:11', 311);
+
+-- Run at 2024-03-24 15:31:15
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+INSERT INTO company (company_id, company_name, c_doesProcessing, c_doesTransport) VALUES (1, 'Local Co-Op', FALSE, TRUE);
+
+-- Run at 2024-03-24 15:32:52
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+INSERT INTO transport (transport_id, t_transporter, t_processor, t_truckNum, t_fromTank, t_pickup) VALUES 
+(1, 1, 1, 'TRK001', 1, '2024-01-01 15:46:00');
+
+-- Run at 2024-03-24 15:33:03
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+SELECT * FROM farm;
+
+-- Run at 2024-03-24 15:33:43
+-- 
+
+-- 1 Results:
+-- +---------+-----------------+-------------+-------+-------+
+-- | farm_id |       addr      |     city    | state |  zip  |
+-- +---------+-----------------+-------------+-------+-------+
+-- |       1 | Country 27 Blvd | Pine Island |    MN | 55963 |
+-- +---------+-----------------+-------------+-------+-------+
+
+-- ==================================
+
+-- Query: 
+SELECT * FROM cow;
+
+-- Run at 2024-03-24 15:34:27
+-- 
+
+-- 5 Results:
+-- +---------+------------+----------+
+-- | cow_tag |  cow_name  | cow_farm |
+-- +---------+------------+----------+
+-- |       1 |  Buttercup |        1 |
+-- +---------+------------+----------+
+-- |       2 | Clarabelle |        1 |
+-- +---------+------------+----------+
+-- |       3 |      Daisy |        1 |
+-- +---------+------------+----------+
+-- |       4 |      Bella |        1 |
+-- +---------+------------+----------+
+-- |       5 |     Bessie |        1 |
+-- +---------+------------+----------+
+
+-- ==================================
+
+-- Query: 
+SELECT * FROM milkingMachine;
+SELECT * FROM tank;
+
+-- Run at 2024-03-24 15:35:05
+-- 
+
+-- 1 Results:
+-- +-------+---------+
+-- | mm_id | mm_farm |
+-- +-------+---------+
+-- |     1 |       1 |
+-- +-------+---------+
+
+-- ==================================
+
+-- Query: 
+SELECT * FROM milkingMachine;
+
+-- Run at 2024-03-24 15:35:16
+-- 
+
+-- 1 Results:
+-- +-------+---------+
+-- | mm_id | mm_farm |
+-- +-------+---------+
+-- |     1 |       1 |
+-- +-------+---------+
+
+-- ==================================
+
+-- Query: 
+SELECT * FROM tank;
+
+-- Run at 2024-03-24 15:35:24
+-- 
+
+-- 1 Results:
+-- +---------+--------+------------+-----------+
+-- | tank_id | t_farm | t_purchase | t_retired |
+-- +---------+--------+------------+-----------+
+-- |       1 |      1 | 2024-01-01 |           |
+-- +---------+--------+------------+-----------+
+
+-- ==================================
+
+-- Query: 
+SELECT * FROM feed ORDER BY f_datetime;
+
+-- Run at 2024-03-24 15:35:45
+-- 
+
+-- 2 Results:
+-- +--------+---------------------+------+---------+
+-- | f_farm |      f_datetime     | f_oz |   kind  |
+-- +--------+---------------------+------+---------+
+-- |      1 | 2024-01-03 00:00:00 | 2800 | Alfalfa |
+-- +--------+---------------------+------+---------+
+-- |      1 | 2024-01-17 00:00:00 |  280 |    Corn |
+-- +--------+---------------------+------+---------+
+
+-- ==================================
+
+-- Query: 
+SELECT * FROM milk ORDER BY milk_date, milk_start;
+
+-- Run at 2024-03-24 15:36:19
+-- 
+
+-- 15 Results:
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- | milk_id | milk_machine | milk_cow |  milk_date | milk_start | milk_stop | milk_oz |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |       1 |            1 |        4 | 2024-01-01 |   07:02:00 |  07:05:00 |     300 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |       2 |            1 |        2 | 2024-01-01 |   07:07:00 |  07:13:00 |     234 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |       3 |            1 |        5 | 2024-01-01 |   07:16:00 |  07:23:00 |     274 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |       4 |            1 |        3 | 2024-01-01 |   07:28:00 |  07:36:00 |     186 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |       5 |            1 |        1 | 2024-01-01 |   07:53:00 |  08:08:00 |     235 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |       6 |            1 |        3 | 2024-01-01 |   11:23:00 |  11:33:00 |     247 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |       7 |            1 |        4 | 2024-01-01 |   11:48:00 |  12:05:00 |     211 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |       8 |            1 |        1 | 2024-01-01 |   12:12:00 |  12:30:00 |     198 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |       9 |            1 |        2 | 2024-01-01 |   12:33:00 |  12:45:00 |     275 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |      10 |            1 |        5 | 2024-01-01 |   12:49:00 |  13:05:00 |     286 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |      11 |            1 |        5 | 2024-01-01 |   15:02:00 |  15:15:00 |     187 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |      12 |            1 |        2 | 2024-01-01 |   15:23:00 |  15:45:00 |     232 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |      13 |            1 |        1 | 2024-01-01 |   15:58:00 |  16:11:00 |     311 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |      14 |            1 |        3 | 2024-01-01 |   16:21:00 |  16:30:00 |     312 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+-- |      15 |            1 |        4 | 2024-01-01 |   16:33:00 |  16:46:00 |     257 |
+-- +---------+--------------+----------+------------+------------+-----------+---------+
+
+-- ==================================
+
+-- Query: 
+SELECT * FROM transport;
+
+-- Run at 2024-03-24 15:37:23
+-- 
+
+-- 1 Results:
+-- +--------------+---------------+-------------+------------+------------+---------------------+
+-- | transport_id | t_transporter | t_processor | t_truckNum | t_fromTank |       t_pickup      |
+-- +--------------+---------------+-------------+------------+------------+---------------------+
+-- |            1 |             1 |           1 |     TRK001 |          1 | 2024-01-01 15:46:00 |
+-- +--------------+---------------+-------------+------------+------------+---------------------+
+
+-- ==================================
+
+-- Query: 
+SELECT * FROM hand WHERE hand_fname IN ('Fred', 'George') AND hand_lname = 'Cowherd';
+
+-- Run at 2024-03-24 15:40:37
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+INSERT INTO hand (hand_id, hand_fname, hand_lname, hand_primaryFarm) VALUES (1, 'Fred', 'Cowherd', 1);
+INSERT INTO hand (hand_id, hand_fname, hand_lname, hand_primaryFarm) VALUES (2, 'George', 'Cowherd', 1);
+
+-- Run at 2024-03-24 15:41:39
+-- 
+
+-- 0 Results:
+-- +
+-- |
+-- +
+
+-- ==================================
+
+-- Query: 
+SELECT * FROM hand WHERE hand_fname IN ('Fred', 'George') AND hand_lname = 'Cowherd' AND hand_primaryFarm = 1;
+
+-- Run at 2024-03-24 15:41:54
+-- 
+
+-- 2 Results:
+-- +---------+------------+------------+------------------+
+-- | hand_id | hand_fname | hand_lname | hand_primaryFarm |
+-- +---------+------------+------------+------------------+
+-- |       1 |       Fred |    Cowherd |                1 |
+-- +---------+------------+------------+------------------+
+-- |       2 |     George |    Cowherd |                1 |
+-- +---------+------------+------------+------------------+
+
+-- ==================================
+
